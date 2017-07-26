@@ -1,5 +1,5 @@
 //
-//  SecondViewController.swift
+//  MemeGridViewController.swift
 //  MemeMe2.0
 //
 //  Created by Taylor Masterson on 7/25/17.
@@ -8,11 +8,15 @@
 
 import UIKit
 
-class SecondViewController: UIViewController {
+class MemeGridViewController: UIViewController {
 
+    var memes: [Meme]!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        memes = appDelegate.memes
     }
 
     override func didReceiveMemoryWarning() {
