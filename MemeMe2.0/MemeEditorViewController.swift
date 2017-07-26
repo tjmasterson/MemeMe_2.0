@@ -35,8 +35,8 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     @IBAction func cancelMemeCreation(_ sender: Any) {
-        configureTextField(textField: topTextField, text: "TOP", defaultAttributes: myTextAttributes)
-        configureTextField(textField: bottomTextField, text: "BOTTOM", defaultAttributes: myTextAttributes)
+        topTextField.text = "TOP"
+        bottomTextField.text = "BOTTOM"
         imageView.image = nil
         shareButton.isEnabled = false
     }
@@ -57,8 +57,8 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureTextField(textField: topTextField, text: "TOP", defaultAttributes: myTextAttributes)
-        configureTextField(textField: bottomTextField, text: "BOTTOM", defaultAttributes: myTextAttributes)
+        configureTextField(textField: topTextField, text: "TOP")
+        configureTextField(textField: bottomTextField, text: "BOTTOM")
         shareButton.isEnabled = false
     }
     
@@ -73,10 +73,10 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     
     // MARK: - Top and Botom Text Field Attributes 
     
-    func configureTextField(textField: UITextField, text: String, defaultAttributes: [String: Any]) {
+    func configureTextField(textField: UITextField, text: String) {
         textField.delegate = self
         textField.text = text
-        textField.defaultTextAttributes = defaultAttributes
+        textField.defaultTextAttributes = myTextAttributes
         textField.textAlignment = .center
     }
     
