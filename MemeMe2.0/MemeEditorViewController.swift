@@ -39,20 +39,26 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
         bottomTextField.text = "BOTTOM"
         imageView.image = nil
         shareButton.isEnabled = false
+        dismiss(animated: true, completion: nil)
+
     }
     
     @IBAction func shareMeme(_ sender: Any) {
         let meme = generateMemeImage()
         let activityViewController = UIActivityViewController(activityItems: [meme], applicationActivities: nil)
-        self.present(activityViewController, animated: true, completion: nil)
         
         activityViewController.completionWithItemsHandler = {
-            (activityTyp: UIActivityType?, completed: Bool, returnedItems: [Any]?, activityError: Error?) in
+            (activityType: UIActivityType?, completed: Bool, returnedItems: [Any]?, activityError: Error?) in
                 if completed {
+                    
                     self.save(memeImage: meme)
+                    
                     activityViewController.dismiss(animated: true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
                 }
         }
+        
+        self.present(activityViewController, animated: true, completion: nil)
     }
     
     override func viewDidLoad() {
@@ -68,6 +74,7 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     }
     
     override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
         unsubscribeToKeyboardNotifications()
     }
     
@@ -154,13 +161,19 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     
     func setToolbars(visible: Bool) {
         topToolbar.isHidden = !visible
-        topToolbar.isHidden = !visible
+        bottomToolbar.isHidden = !visible
     }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+
     
     func generateMemeImage() -> UIImage {
         // hide toolbars temporarily to capture image from view
         setToolbars(visible: false)
-        
+        view.endEditing(true)
+
         // get the size of the view and build an image from whats on the screen
         UIGraphicsBeginImageContext(self.view.frame.size)
         view.drawHierarchy(in: self.view.frame, afterScreenUpdates: true)
@@ -175,15 +188,19 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     
     func save(memeImage: UIImage) {
         // Create the meme
-        let meme = Meme(topText: topTextField.text!,
-                        bottomText: bottomTextField.text!,
-                        originalImage: imageView.image,
-                        memeImage: memeImage)
         
-        // Add it to the memes array in the Application Delegate
-        let object = UIApplication.shared.delegate
-        let appDelegate = object as! AppDelegate
-        appDelegate.memes.append(meme)
+        if imageView.image != nil && topTextField.text != nil && bottomTextField.text != nil {
+            let meme = Meme(topText: topTextField.text!,
+                            bottomText: bottomTextField.text!,
+                            originalImage: imageView.image,
+                            memeImage: memeImage)
+            
+            // Add it to the memes array in the Application Delegate
+            let appDelegate = UIApplication.shared.delegate as! AppDelegate
+            appDelegate.memes.append(meme)
+        } else {
+            print("nope")
+        }
     }
 
 }

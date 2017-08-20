@@ -7,20 +7,24 @@
 //
 
 import UIKit
+import Foundation
 
 class MemeTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var memes: [Meme]!
+    var memes: [Meme] { return (UIApplication.shared.delegate as! AppDelegate).memes }
 
+    @IBOutlet weak var tableView: UITableView!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        memes = appDelegate.memes
+        
+        tableView.delegate = self
+        tableView.dataSource = self
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView?.reloadData()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -29,9 +33,9 @@ class MemeTableViewController: UIViewController, UITableViewDelegate, UITableVie
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeTableViewCell", for: indexPath) as! MemeTableViewCell
-        let meme = self.memes[indexPath.row]
-        cell.originalImage?.image = meme.memeImage!
-        cell.memeText?.text = "\(meme.topText)...\(meme.bottomText)"
+        let meme = memes[indexPath.row]
+        cell.originalImage?.image =  meme.memeImage!
+        cell.memeText?.text = "\(meme.topText!)...\(meme.bottomText!)"
         
         return cell
     }
