@@ -9,9 +9,11 @@
 import UIKit
 
 class MemeTableViewCell: UITableViewCell {
-
+    
     @IBOutlet weak var originalImage: UIImageView!
     @IBOutlet weak var memeText: UILabel!
+    @IBOutlet weak var topLabel: UILabel!
+    @IBOutlet weak var bottomLabel: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -20,8 +22,13 @@ class MemeTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
+    }
+    
+    func setupCellWith(meme:Meme) {
+        originalImage?.image =  meme.originalImage!
+        topLabel?.attributedText = NSAttributedString(string: meme.topText!, attributes: Constants.MemeTableViewCellTextAttributes)
+        bottomLabel?.attributedText = NSAttributedString(string: meme.bottomText!, attributes: Constants.MemeTableViewCellTextAttributes)
+        memeText?.text = "\(meme.topText!)...\(meme.bottomText!)"
     }
 
 }

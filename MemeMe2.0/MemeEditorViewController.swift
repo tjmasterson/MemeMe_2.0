@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate, UITextFieldDelegate {
+class MemeEditorViewController: UIViewController, UINavigationControllerDelegate {
     
     let myTextAttributes:[String:Any] = [
         NSStrokeColorAttributeName: UIColor.black,
@@ -83,34 +83,10 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     func configureTextField(textField: UITextField, text: String) {
         textField.delegate = self
         textField.text = text
-        textField.defaultTextAttributes = myTextAttributes
+        textField.defaultTextAttributes = Constants.MemeEditorVCTextAttributes
         textField.textAlignment = .center
     }
     
-    // MARK: - Image Picker Delegate and Presentation
-    
-    func presentImagePickerWith(sourceType: UIImagePickerControllerSourceType) {
-        let imagePicker = UIImagePickerController()
-        imagePicker.delegate = self
-        imagePicker.sourceType = sourceType
-        present(imagePicker, animated: true, completion: nil)
-    }
-    
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            imageView.image = image
-            shareButton.isEnabled = true
-        }
-        dismiss(animated: true, completion: nil)
-    }
-    
-    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        if imageView.image == nil {
-            shareButton.isEnabled = false
-        }
-        shareButton.isEnabled = true
-        dismiss(animated: true, completion: nil)
-    }
     
     // MARK: - Keyboard Presentation and Notification Setup
     
@@ -144,17 +120,6 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
     func unsubscribeToKeyboardNotifications() {
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
-    }
-    
-    // MARK: - Text Field Delegate
-    
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        textField.resignFirstResponder()
-    }
-    
-    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
-        return true
     }
     
     // MARK: - Create and Save Meme Object
@@ -206,9 +171,47 @@ class MemeEditorViewController: UIViewController, UIImagePickerControllerDelegat
 }
 
 
+extension MemeEditorViewController: UITextFieldDelegate {
+    // MARK: - Text Field Delegate
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        textField.resignFirstResponder()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder()
+        return true
+    }
+    
+}
 
-
-
+extension MemeEditorViewController: UIImagePickerControllerDelegate {
+    // MARK: - Image Picker Delegate and Presentation
+    
+    func presentImagePickerWith(sourceType: UIImagePickerControllerSourceType) {
+        let imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = sourceType
+        present(imagePicker, animated: true, completion: nil)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            imageView.image = image
+            shareButton.isEnabled = true
+        }
+        dismiss(animated: true, completion: nil)
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        if imageView.image == nil {
+            shareButton.isEnabled = false
+        }
+        shareButton.isEnabled = true
+        dismiss(animated: true, completion: nil)
+    }
+    
+}
 
 
 

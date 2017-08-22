@@ -55,6 +55,6 @@ class MemeCollectionViewController: UICollectionViewController {
         self.navigationController?.pushViewController(memeDetailViewController, animated: true)
     }
 
-    
 }
+
 

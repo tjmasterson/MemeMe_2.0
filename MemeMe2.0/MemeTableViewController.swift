@@ -9,7 +9,7 @@
 import UIKit
 import Foundation
 
-class MemeTableViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class MemeTableViewController: UIViewController {
     
     var memes: [Meme] { return (UIApplication.shared.delegate as! AppDelegate).memes }
 
@@ -26,7 +26,18 @@ class MemeTableViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewWillAppear(animated)
         tableView?.reloadData()
     }
+}
 
+extension MemeTableViewController: UITableViewDelegate {
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let memeDetailViewController = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
+        memeDetailViewController.meme = self.memes[indexPath.row]
+        self.navigationController?.pushViewController(memeDetailViewController, animated: true)
+    }
+}
+
+extension MemeTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.memes.count
     }
@@ -34,18 +45,8 @@ class MemeTableViewController: UIViewController, UITableViewDelegate, UITableVie
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "MemeTableViewCell", for: indexPath) as! MemeTableViewCell
         let meme = memes[indexPath.row]
-        cell.originalImage?.image =  meme.memeImage!
-        cell.memeText?.text = "\(meme.topText!)...\(meme.bottomText!)"
+        cell.setupCellWith(meme: meme)
         
         return cell
     }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let memeDetailViewController = self.storyboard!.instantiateViewController(withIdentifier: "MemeDetailViewController") as! MemeDetailViewController
-        memeDetailViewController.meme = self.memes[indexPath.row]
-        self.navigationController?.pushViewController(memeDetailViewController, animated: true)
-    }
-    
-    
 }
-
